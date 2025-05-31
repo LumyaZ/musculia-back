@@ -4,6 +4,7 @@ import com.example.musculia.model.AuthUser;
 import com.example.musculia.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +17,53 @@ public class AuthUserController {
     @Autowired
     private AuthUserService authUserService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthUser loginRequest) {
+        System.out.println("Tentative de connexion pour l'email: " + loginRequest.getEmail());
+        System.out.println("Mot de passe reçu (en clair): " + loginRequest.getPassword());
+        
+        Optional<AuthUser> user = authUserService.getUserByEmail(loginRequest.getEmail());
+        
+        if (user.isPresent()) {
+            System.out.println("Utilisateur trouvé avec l'email: " + loginRequest.getEmail());
+            System.out.println("Mot de passe attendu (hashé): " + user.get().getPassword());
+            System.out.println("Hash du mot de passe reçu: " + passwordEncoder.encode(loginRequest.getPassword()));
+            
+            // Test de déhashage (à des fins de débogage uniquement)
+            System.out.println("Test de déhashage du mot de passe attendu:");
+            System.out.println("Mot de passe attendu (en clair): " + user.get().getPassword());
+            System.out.println("Mot de passe reçu (en clair): " + loginRequest.getPassword());
+            
+            System.out.println("Vérification du mot de passe...");
+            
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
+                System.out.println("Connexion réussie pour l'utilisateur: " + loginRequest.getEmail());
+                return ResponseEntity.ok(user.get());
+            } else {
+                System.out.println("Mot de passe incorrect pour l'utilisateur: " + loginRequest.getEmail());
+                System.out.println("Mot de passe reçu (en clair): " + loginRequest.getPassword());
+                System.out.println("Mot de passe attendu (hashé): " + user.get().getPassword());
+            }
+        } else {
+            System.out.println("Aucun utilisateur trouvé avec l'email: " + loginRequest.getEmail());
+        }
+        
+        return ResponseEntity.badRequest().body("Email ou mot de passe incorrect");
+    }
+
     @PostMapping("/register")
     public ResponseEntity<AuthUser> registerUser(@RequestBody AuthUser user) {
-        System.out.println(user);
+        System.out.println("Inscription d'un nouvel utilisateur: " + user.getEmail());
+        System.out.println("Mot de passe avant hash: " + user.getPassword());
+        
+        // Hash du mot de passe avec BCrypt
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        System.out.println("Mot de passe après hash: " + hashedPassword);
+        user.setPassword(hashedPassword);
+        
         return ResponseEntity.ok(authUserService.createUser(user));
     }
 

@@ -25,7 +25,6 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return authUserRepository.save(user);
     }
 
