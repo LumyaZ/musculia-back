@@ -1,5 +1,6 @@
 package com.example.musculia.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,6 +20,7 @@ public class UserProfile {
 
     @OneToOne
     @JoinColumn(name = "auth_user_id", nullable = false)
+    @JsonBackReference
     private AuthUser authUser;
 
     private String gender;

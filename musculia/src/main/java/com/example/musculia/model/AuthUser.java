@@ -1,5 +1,6 @@
 package com.example.musculia.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,6 +36,7 @@ public class AuthUser {
     private LocalDateTime lastUpdated;
 
     @OneToOne(mappedBy = "authUser", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private UserProfile userProfile;
 
     @Column

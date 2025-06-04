@@ -1,13 +1,16 @@
 package com.example.musculia.controller;
 
 import com.example.musculia.model.AuthUser;
+import com.example.musculia.security.JwtTokenProvider;
 import com.example.musculia.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +22,9 @@ public class AuthUserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthUser loginRequest) {
@@ -32,20 +38,18 @@ public class AuthUserController {
             System.out.println("Mot de passe attendu (hashé): " + user.get().getPassword());
             System.out.println("Hash du mot de passe reçu: " + passwordEncoder.encode(loginRequest.getPassword()));
             
-            // Test de déhashage (à des fins de débogage uniquement)
-            System.out.println("Test de déhashage du mot de passe attendu:");
-            System.out.println("Mot de passe attendu (en clair): " + user.get().getPassword());
-            System.out.println("Mot de passe reçu (en clair): " + loginRequest.getPassword());
-            
-            System.out.println("Vérification du mot de passe...");
-            
             if (passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
                 System.out.println("Connexion réussie pour l'utilisateur: " + loginRequest.getEmail());
-                return ResponseEntity.ok(user.get());
+                
+                String token = jwtTokenProvider.generateToken(user.get().getEmail());
+                
+                Map<String, Object> response = new HashMap<>();
+                response.put("token", token);
+                response.put("user", user.get());
+                
+                return ResponseEntity.ok(response);
             } else {
                 System.out.println("Mot de passe incorrect pour l'utilisateur: " + loginRequest.getEmail());
-                System.out.println("Mot de passe reçu (en clair): " + loginRequest.getPassword());
-                System.out.println("Mot de passe attendu (hashé): " + user.get().getPassword());
             }
         } else {
             System.out.println("Aucun utilisateur trouvé avec l'email: " + loginRequest.getEmail());
@@ -55,7 +59,7 @@ public class AuthUserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthUser> registerUser(@RequestBody AuthUser user) {
+    public ResponseEntity<?> registerUser(@RequestBody AuthUser user) {
         System.out.println("Inscription d'un nouvel utilisateur: " + user.getEmail());
         System.out.println("Mot de passe avant hash: " + user.getPassword());
         
@@ -64,7 +68,15 @@ public class AuthUserController {
         System.out.println("Mot de passe après hash: " + hashedPassword);
         user.setPassword(hashedPassword);
         
-        return ResponseEntity.ok(authUserService.createUser(user));
+        AuthUser savedUser = authUserService.createUser(user);
+        
+        String token = jwtTokenProvider.generateToken(savedUser.getEmail());
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", savedUser);
+        
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/users")
