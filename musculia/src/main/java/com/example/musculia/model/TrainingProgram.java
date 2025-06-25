@@ -18,8 +18,11 @@ public class TrainingProgram {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_profile_id", nullable = false)
+    @JoinColumn(name = "user_profile_id", nullable = true)
     private UserProfile userProfile;
+
+    @Column(name = "is_default", nullable = false)
+    private Boolean isDefault = false;
 
     @Column(name = "program_type", length = 50)
     private String programType;

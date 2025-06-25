@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TrainingProgramRepository extends JpaRepository<TrainingProgram, Long> {
     List<TrainingProgram> findByUserProfileId(Long userProfileId);
+    List<TrainingProgram> findByIsDefaultTrue();
+    List<TrainingProgram> findByIsDefaultFalseAndUserProfileId(Long userProfileId);
 } 

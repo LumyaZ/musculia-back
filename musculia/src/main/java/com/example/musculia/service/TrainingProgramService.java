@@ -8,6 +8,9 @@ public interface TrainingProgramService {
     TrainingProgram getProgramById(Long id);
     List<TrainingProgram> getAllPrograms();
     List<TrainingProgram> getProgramsByUserProfileId(Long userProfileId);
+    List<TrainingProgram> getDefaultPrograms();
+    List<TrainingProgram> getUserPrograms(Long userProfileId);
+    TrainingProgram applyDefaultProgramToUser(Long defaultProgramId, Long userProfileId);
     TrainingProgram updateProgram(Long id, TrainingProgram programDetails);
     void deleteProgram(Long id);
 } 

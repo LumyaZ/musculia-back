@@ -25,14 +25,31 @@ public class TrainingProgramController {
         return ResponseEntity.ok(trainingProgramService.getAllPrograms());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TrainingProgram> getProgramById(@PathVariable Long id) {
-        return ResponseEntity.ok(trainingProgramService.getProgramById(id));
+    @GetMapping("/default")
+    public ResponseEntity<List<TrainingProgram>> getDefaultPrograms() {
+        return ResponseEntity.ok(trainingProgramService.getDefaultPrograms());
     }
 
     @GetMapping("/user/{userProfileId}")
     public ResponseEntity<List<TrainingProgram>> getProgramsByUserProfileId(@PathVariable Long userProfileId) {
         return ResponseEntity.ok(trainingProgramService.getProgramsByUserProfileId(userProfileId));
+    }
+
+    @GetMapping("/user/{userProfileId}/custom")
+    public ResponseEntity<List<TrainingProgram>> getUserPrograms(@PathVariable Long userProfileId) {
+        return ResponseEntity.ok(trainingProgramService.getUserPrograms(userProfileId));
+    }
+
+    @PostMapping("/default/{defaultProgramId}/apply/{userProfileId}")
+    public ResponseEntity<TrainingProgram> applyDefaultProgramToUser(
+            @PathVariable Long defaultProgramId, 
+            @PathVariable Long userProfileId) {
+        return ResponseEntity.ok(trainingProgramService.applyDefaultProgramToUser(defaultProgramId, userProfileId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TrainingProgram> getProgramById(@PathVariable Long id) {
+        return ResponseEntity.ok(trainingProgramService.getProgramById(id));
     }
 
     @PutMapping("/{id}")
