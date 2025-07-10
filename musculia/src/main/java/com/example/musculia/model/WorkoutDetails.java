@@ -5,6 +5,8 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,10 +21,12 @@ public class WorkoutDetails {
 
     @ManyToOne
     @JoinColumn(name = "workout_id", nullable = false)
+    @JsonIgnore
     private Workout workout;
 
     @ManyToOne
     @JoinColumn(name = "exercise_id", nullable = false)
+    @JsonIgnore
     private Exercise exercise;
 
     private Integer repetitions;
