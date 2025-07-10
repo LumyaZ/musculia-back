@@ -43,9 +43,6 @@ public class UserProfile {
     private LocalDateTime lastUpdated;
 
     @OneToMany(mappedBy = "userProfile")
-    private List<TrainingProgram> trainingPrograms;
-
-    @OneToMany(mappedBy = "userProfile")
     private List<Workout> workouts;
 
     public enum Gender {

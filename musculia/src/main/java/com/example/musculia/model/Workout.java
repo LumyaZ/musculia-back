@@ -5,6 +5,8 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,15 +21,13 @@ public class Workout {
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")
+    @JsonIgnore
     private UserProfile userProfile;
-
-    @ManyToOne
-    @JoinColumn(name = "program_id")
-    private TrainingProgram program;
 
     private LocalDateTime sessionDate;
     private Integer duration; // en minutes
     private String notes;
+    private String categorie;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -38,6 +38,7 @@ public class Workout {
     private LocalDateTime lastUpdated;
 
     @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<WorkoutDetails> workoutDetails;
 
     // Getters and Setters
@@ -55,14 +56,6 @@ public class Workout {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
-    }
-
-    public TrainingProgram getProgram() {
-        return program;
-    }
-
-    public void setProgram(TrainingProgram program) {
-        this.program = program;
     }
 
     public LocalDateTime getSessionDate() {
@@ -87,6 +80,14 @@ public class Workout {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
     }
 
     public List<WorkoutDetails> getWorkoutDetails() {

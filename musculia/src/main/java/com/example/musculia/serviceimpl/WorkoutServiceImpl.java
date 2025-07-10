@@ -37,16 +37,10 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public List<Workout> getWorkoutsByProgramId(Long programId) {
-        return workoutRepository.findByProgramId(programId);
-    }
-
-    @Override
     public Workout updateWorkout(Long id, Workout workoutDetails) {
         Workout workout = getWorkoutById(id);
         
         workout.setUserProfile(workoutDetails.getUserProfile());
-        workout.setProgram(workoutDetails.getProgram());
         workout.setSessionDate(workoutDetails.getSessionDate());
         workout.setDuration(workoutDetails.getDuration());
         workout.setNotes(workoutDetails.getNotes());

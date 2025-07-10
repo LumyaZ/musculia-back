@@ -8,7 +8,6 @@ public interface WorkoutService {
     Workout getWorkoutById(Long id);
     List<Workout> getAllWorkouts();
     List<Workout> getWorkoutsByUserProfileId(Long userProfileId);
-    List<Workout> getWorkoutsByProgramId(Long programId);
     Workout updateWorkout(Long id, Workout workoutDetails);
     void deleteWorkout(Long id);
 } 
