@@ -2,8 +2,10 @@ package com.example.musculia.serviceimpl;
 
 import com.example.musculia.model.AuthUser;
 import com.example.musculia.model.UserProfile;
+import com.example.musculia.model.Workout;
 import com.example.musculia.repository.AuthUserRepository;
 import com.example.musculia.repository.UserProfileRepository;
+import com.example.musculia.repository.WorkoutRepository;
 import com.example.musculia.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Autowired
     private AuthUserRepository authUserRepository;
+
+    @Autowired
+    private WorkoutRepository workoutRepository;
 
     @Override
     public UserProfile createProfile(UserProfile profile) {
@@ -74,5 +79,20 @@ public class UserProfileServiceImpl implements UserProfileService {
             throw new EntityNotFoundException("User profile not found with id: " + id);
         }
         userProfileRepository.deleteById(id);
+    }
+
+    @Override
+    public UserProfile assignWorkoutToUser(Long profileId, Long workoutId) {
+        UserProfile profile = getProfileById(profileId);
+        Workout workout = workoutRepository.findById(workoutId)
+            .orElseThrow(() -> new EntityNotFoundException("Workout not found with id: " + workoutId));
+        if (profile.getWorkouts() == null) {
+            profile.setWorkouts(new java.util.ArrayList<>());
+        }
+        if (!profile.getWorkouts().contains(workout)) {
+            profile.getWorkouts().add(workout);
+            userProfileRepository.save(profile);
+        }
+        return profile;
     }
 } 

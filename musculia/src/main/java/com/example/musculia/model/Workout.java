@@ -19,11 +19,6 @@ public class Workout {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_profile_id")
-    @JsonIgnore
-    private UserProfile userProfile;
-
     private LocalDateTime sessionDate;
     private Integer duration; // en minutes
     private String notes;
@@ -48,14 +43,6 @@ public class Workout {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public UserProfile getUserProfile() {
-        return userProfile;
-    }
-
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
     }
 
     public LocalDateTime getSessionDate() {

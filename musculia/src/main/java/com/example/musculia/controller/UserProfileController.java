@@ -73,4 +73,10 @@ public class UserProfileController {
         userProfileService.deleteProfile(id);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{profileId}/workouts/{workoutId}")
+    public ResponseEntity<UserProfile> assignWorkoutToUser(@PathVariable Long profileId, @PathVariable Long workoutId) {
+        UserProfile updatedProfile = userProfileService.assignWorkoutToUser(profileId, workoutId);
+        return ResponseEntity.ok(updatedProfile);
+    }
 } 

@@ -10,4 +10,5 @@ public interface UserProfileService {
     List<UserProfile> getAllProfiles();
     UserProfile updateProfile(Long id, UserProfile profileDetails);
     void deleteProfile(Long id);
+    UserProfile assignWorkoutToUser(Long profileId, Long workoutId);
 } 

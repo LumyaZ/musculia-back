@@ -42,7 +42,12 @@ public class UserProfile {
     @UpdateTimestamp
     private LocalDateTime lastUpdated;
 
-    @OneToMany(mappedBy = "userProfile")
+    @ManyToMany
+    @JoinTable(
+        name = "user_workout",
+        joinColumns = @JoinColumn(name = "user_profile_id"),
+        inverseJoinColumns = @JoinColumn(name = "workout_id")
+    )
     private List<Workout> workouts;
 
     public enum Gender {

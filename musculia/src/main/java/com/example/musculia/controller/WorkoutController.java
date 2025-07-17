@@ -30,11 +30,6 @@ public class WorkoutController {
         return ResponseEntity.ok(workoutService.getWorkoutById(id));
     }
 
-    @GetMapping("/user/{userProfileId}")
-    public ResponseEntity<List<Workout>> getWorkoutsByUserProfileId(@PathVariable Long userProfileId) {
-        return ResponseEntity.ok(workoutService.getWorkoutsByUserProfileId(userProfileId));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Workout> updateWorkout(@PathVariable Long id, @RequestBody Workout workoutDetails) {
         return ResponseEntity.ok(workoutService.updateWorkout(id, workoutDetails));
